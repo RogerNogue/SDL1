@@ -5,6 +5,7 @@
 #include "ModuleTextures.h"
 #include "ModuleInput.h"
 #include "ModuleScene.h"
+#include "ModuleFirstTriangle.h"
 
 using namespace std;
 
@@ -12,10 +13,12 @@ Application::Application()
 {
 	// Order matters: they will Init/start/update in this order
 	modules.push_back(window = new ModuleWindow());
-	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(scene = new ModuleScene());
+	modules.push_back(firstTriangle = new ModuleFirstTriangle());
+	modules.push_back(renderer = new ModuleRender());
+	
 
 	// TODO 7: Create a new "scene" module that loads a texture and draws it on the screen
 
@@ -74,6 +77,8 @@ update_status Application::PostUpdate() {
 	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == UPDATE_CONTINUE; ++it)
 		ret = (*it)->PostUpdate();
 
+	//ending frame
+
 	return ret;
 }
 
@@ -83,6 +88,8 @@ bool Application::CleanUp()
 
 	for(list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
+
+
 
 	return ret;
 }

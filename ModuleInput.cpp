@@ -1,3 +1,4 @@
+#include "GL/glew.h"
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
@@ -35,6 +36,13 @@ update_status ModuleInput::Update()
 
 	if (keyboard[SDL_SCANCODE_ESCAPE]) {
 		return UPDATE_STOP;
+	}
+	SDL_Event event;
+	SDL_PollEvent(&event);
+	if (event.type == SDL_WINDOWEVENT) {
+		if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+				glViewport(0, 0, event.window.data1, event.window.data2);
+		}
 	}
 
 	// TODO 1: Make the application properly close when ESC is pressed (do not use exit())

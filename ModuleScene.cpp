@@ -12,11 +12,12 @@ ModuleScene::~ModuleScene()
 }
 
 bool ModuleScene::Init() {
-	App->textures->Load("")
+	//App->textures->Load("");
+	return true;
 }
 
 bool ModuleScene::CleanUp() {
-	
+	return true;
 }
 
 update_status ModuleScene::PreUpdate() {

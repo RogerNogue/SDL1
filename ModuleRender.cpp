@@ -1,3 +1,4 @@
+#include "GL/glew.h"
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleRender.h"
@@ -36,10 +37,10 @@ bool ModuleRender::Init()
 }
 
 update_status ModuleRender::PreUpdate() {
-	if (SDL_RenderClear(renderer) == 0) {
-		return UPDATE_CONTINUE;
-	}
-	else return UPDATE_ERROR;
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
+	return UPDATE_CONTINUE;
+
 
 }
 
@@ -54,7 +55,7 @@ update_status ModuleRender::Update()
 }
 
 update_status ModuleRender::PostUpdate() {
-	SDL_RenderPresent(renderer);
+	SDL_GL_SwapWindow(App->window->window);
 
 	return UPDATE_CONTINUE;
 }

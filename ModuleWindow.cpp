@@ -1,6 +1,8 @@
+#include "GL/glew.h"
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include <assert.h>
 
 ModuleWindow::ModuleWindow()
 {
@@ -46,6 +48,16 @@ bool ModuleWindow::Init()
 		// TODO 2: Create options for RESIZABLE, SDL_WINDOW_BORDERLESS, SDL_WINDOW_RESIZABLE,
 		// SDL_WINDOW_FULLSCREEN_DESKTOP (same way as with FULLSCREEN)
 
+		//OpenGL initialization
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+
+		flags |= SDL_WINDOW_OPENGL;
+
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
 		if(window == NULL)
@@ -57,7 +69,29 @@ bool ModuleWindow::Init()
 		{
 			//Get window surface
 			screen_surface = SDL_GetWindowSurface(window);
+
+			//OpenGL initialization
+			context = SDL_GL_CreateContext(window);
+
+			//detect OpenGL errors
+			GLenum err = glewInit();
+			assert(GLEW_OK == err);//glew init error
+			LOG("Using Glew %s", glewGetString(GLEW_VERSION));
+
+			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+			glClearDepth(1.0f);
+			glClearColor(0.f, 0.f, 0.f, 1.f);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glEnable(GL_DEPTH_TEST);
+			glFrontFace(GL_CCW);
+			glEnable(GL_CULL_FACE);
+			glEnable(GL_TEXTURE_2D);
+			glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+			glClearDepth(1.0f);
+			glClearColor(0.3f, 0.3f, 0.3f, 1.f);
+			
 		}
+
 	}
 
 	return ret;
@@ -76,6 +110,9 @@ bool ModuleWindow::CleanUp()
 
 	//Quit SDL subsystems
 	SDL_Quit();
+
+	SDL_GL_DeleteContext(context);
+
 	return true;
 }
 
