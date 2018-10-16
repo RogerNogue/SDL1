@@ -34,6 +34,7 @@ update_status ModuleFirstTriangle::PostUpdate() {
 		(void*)0 // array buffer offset
 	);
 	glDrawArrays(GL_TRIANGLES, 0, 3); // start at 0 and 3 tris
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glDisableVertexAttribArray(0);
 
 	return UPDATE_CONTINUE;
